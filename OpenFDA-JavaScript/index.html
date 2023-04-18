@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>İlaç Bilgileri</title>
+  </head>
+  <body>
+    <h1>İlaç Bilgileri</h1>
+    <form>
+      <label for="drug-name">İlaç Adı:</label>
+      <input type="text" id="drug-name" name="drug-name">
+      <button type="button" onclick="getDrugInfo()">Bilgi Al</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      async function getDrugInfo() {
+        const drugName = document.getElementById('drug-name').value;
+        const apiUrl = `https://api.fda.gov/drug/label.json?search=openfda.brand_name:${drugName}`;
+
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          const activeIngredients = data.results[0].active_ingredient;
+          const inactiveIngredients = data.results[0].inactive_ingredient;
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = `<p>Aktif İçerikler: ${activeIngredients}</p><p>İnaktif İçerikler: ${inactiveIngredients}</p>`;
+        } catch (error) {
+          console.log(`Hata oluştu: ${error}`);
+        }
+      }
+    </script>
+  </body>
+</html>
